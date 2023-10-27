@@ -53,7 +53,7 @@ def create_clients(onboarding: OnBoardingModel):
             return {
                 "code": "001",
                 "status": result["errors"][0]["errorReason"],
-                "clientId": "000",
+                "clientId": "0000000000",
             }
     except ValidationError as e:
         return {"error": "Error de validación"}

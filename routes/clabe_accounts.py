@@ -25,7 +25,7 @@ def create_clabe_accounts(account_id: str, client_id: str):
             return {
                 "code": "003",
                 "status": "No CTA CLABE",
-                "clientId": "000",
+                "clientId": "0000000000",
             }
     except ValidationError as e:
         return {"error": "Error de validación"}

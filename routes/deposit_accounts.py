@@ -34,7 +34,7 @@ def create_deposit_account(onboarding: OnBoardingModel, account_holder_key: str,
             return {
                 "code": "002",
                 "status": result["errors"][0]["errorReason"],
-                "clientId": "000",
+                "clientId": "0000000000",
             }
     except ValidationError as e:
         return {"error": "Error de validación"}
@@ -70,7 +70,7 @@ def patch_deposit_account(onboarding: OnBoardingModel, clabe_account: str, clien
             return {
                 "code": "004",
                 "status": result["errors"][0]["errorReason"],
-                "clientId": "000",
+                "clientId": "0000000000",
             }
     except ValidationError as e:
         return {"error": "Error de validación"}
@@ -101,7 +101,7 @@ def approve_deposit_account(onboarding: OnBoardingModel, client_id: str):
             return {
                 "code": "005",
                 "status": result["errors"][0]["errorReason"],
-                "clientId": "000",
+                "clientId": "0000000000",
             }
     except ValidationError as e:
         return {"error": "Error de validación"}
