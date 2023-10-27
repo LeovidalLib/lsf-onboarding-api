@@ -38,6 +38,10 @@ def create_clients(onboarding: OnBoardingModel):
             clientRoleKey="8ac9821e8af48ceb018afbbc778700e0",
         )
         data = json.loads(clients_model.model_dump_json())
+        data["_Clientes_N2"] = {
+            "_CURP": onboarding.rs_curp,
+            "_RFC": onboarding.rs_rfc
+        }
         response = requests.post(
             url=URL_BASE + "/api/clients", json=data, headers=HEADERS, verify=False
         )
