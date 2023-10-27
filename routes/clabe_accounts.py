@@ -11,7 +11,7 @@ def create_clabe_accounts(account_id: str, client_id: str):
         )
         data = json.loads(clabe_model.model_dump_json())
         response = requests.post(
-            url=URL_BASE + "/frame-banking/generactacb", json=data, headers=HEADERS, verify=False
+            url=URL_BASE + "/lsfcoresif/v1/generactacb", json=data, headers=HEADERS, verify=False
         )
         result = response.json()
         if "code" in result:
