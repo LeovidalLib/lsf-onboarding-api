@@ -5,31 +5,36 @@ from models.onboarding import OnBoardingModel
 from models.clients import ClientsModels
 from models.addresses import AddressesModel
 from config.config import URL_BASE, HEADERS
-
+from utils.generators import GeneratorsUtils
 # from fastapi import APIRouter
-from pydantic import ValidationError
-from models.clients import ClientsModels
 
 # clients_router = APIRouter()
 # @clients_router.post("/clients")
 def create_clients(onboarding: OnBoardingModel):
     try:
         # onboarding_data = onboarding.model_dump()
+        generators = GeneratorsUtils()
+        # client_id = onboarding.rs_numerocliente
+        # client_id = client_id if client_id is not None else generators.id_client_generator()
+        client_id = generators.id_client_generator()
         clients_model = ClientsModels(
-            id=onboarding.rs_numerocliente,
+            id=client_id,
             firstName=onboarding.firstname,
+            middleName=onboarding.middlename,
             lastName=onboarding.lastname,
-            birthDate=onboarding.rs_fechanacimiento,
-            preferredLanguage="SPANISH",
+            homePhone=onboarding.telephone1,
             mobilePhone=onboarding.mobilephone,
             emailAddress=onboarding.emailaddress1,
+            preferredLanguage="SPANISH",
+            birthDate=onboarding.rs_fechanacimiento,
+            gender=onboarding.rs_genero,
             addresses=[
                 AddressesModel(
                     line1=onboarding.address1_line1,
                     line2=onboarding.address1_line2,
-                    postcode=onboarding.address1_postalcode,
-                    region=onboarding.rs_municipio,
                     city=onboarding.rs_municipio,
+                    region=onboarding.rs_municipio,
+                    postcode=onboarding.address1_postalcode,
                     country="Mexico",
                 )
             ],

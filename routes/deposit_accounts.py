@@ -4,10 +4,14 @@ from pydantic import ValidationError
 from models.onboarding import OnBoardingModel
 from models.deposit_accounts import DepositAccountsModels
 from config.config import URL_BASE, HEADERS
+from utils.generators import GeneratorsUtils
 
-def create_deposit_account(onboarding: OnBoardingModel, account_holder_key: str, client_id: str):
+def create_deposit_account(account_holder_key: str, client_id: str):
     try:
-        id_account = onboarding.rs_numerocuenta
+        generators = GeneratorsUtils()
+        # id_account = onboarding.rs_numerocuenta
+        # id_account = id_account if id_account is not None else generators.id_account_generator()
+        id_account = generators.id_account_generator()
         deposit_account_model = DepositAccountsModels(
             id=id_account,
             name="N2_" + id_account.replace("AP", "N"),
@@ -28,7 +32,8 @@ def create_deposit_account(onboarding: OnBoardingModel, account_holder_key: str,
                 "clientId": client_id,
                 "accountHolderKey": account_holder_key,
                 "accountEncodedKey": result["encodedKey"],
-                "accountId": result["id"]
+                "accountId": result["id"],
+                "creationDate": result["creationDate"]
                 }
         else:
             return {
@@ -39,9 +44,11 @@ def create_deposit_account(onboarding: OnBoardingModel, account_holder_key: str,
     except ValidationError as e:
         return {"error": "Error de validación"}
 
-def patch_deposit_account(onboarding: OnBoardingModel, clabe_account: str, client_id: str):
+# def patch_deposit_account(onboarding: OnBoardingModel, clabe_account: str, client_id: str):
+def patch_deposit_account(account_id: str, clabe_account: str, client_id: str):
     try:
-        id_account = onboarding.rs_numerocuenta
+        # id_account = onboarding.rs_numerocuenta
+        id_account = account_id
         data = [
             {
                 "op": "REPLACE",
@@ -75,9 +82,10 @@ def patch_deposit_account(onboarding: OnBoardingModel, clabe_account: str, clien
     except ValidationError as e:
         return {"error": "Error de validación"}
     
-def approve_deposit_account(onboarding: OnBoardingModel, client_id: str):
+# def approve_deposit_account(onboarding: OnBoardingModel, client_id: str):
+def approve_deposit_account(account_id: str, client_id: str):
     try:
-        id_account = onboarding.rs_numerocuenta
+        id_account = account_id
         data = {
             "action": "APPROVE",
             "notes": "Aprueba cuenta"

@@ -4,6 +4,7 @@ from models.onboarding import OnBoardingModel
 from routes.clients import create_clients
 from routes.deposit_accounts import create_deposit_account, patch_deposit_account, approve_deposit_account
 from routes.clabe_accounts import create_clabe_accounts
+from routes.contracts import create_contracts
 
 onboarding_router = APIRouter()
 
@@ -16,28 +17,46 @@ async def root(onboarding: OnBoardingModel):
                 client_encoded_key = clients_response.get("clientEncodedKey")
                 id_client = clients_response.get("clientId")
                 deposit_response = create_deposit_account(
-                    onboarding=onboarding, 
                     account_holder_key=client_encoded_key, 
                     client_id=id_client
                 )
                 if deposit_response.get("code") == "000":
                     account_id = deposit_response.get("accountId")
+                    creation_date_deposit_account = deposit_response.get("creationDate")
                     clabe_response = create_clabe_accounts(
                         account_id=account_id, 
                         client_id=id_client)
                     if clabe_response.get("code") == "000":
                         clabe_account = clabe_response.get("ctaClabe")
                         patch_account = patch_deposit_account(
-                            onboarding=onboarding,
+                            # onboarding=onboarding,
+                            account_id=account_id,
                             clabe_account=clabe_account,
                             client_id=id_client
                         )
                         if patch_account.get("code") == "000":
-                            approve_account = approve_deposit_account(
+                            contracts_data = {
+                                "id_account": account_id,
+                                "id_client": id_client,
+                                "clabe": clabe_account,
+                                "account_creation": creation_date_deposit_account
+                            }
+                            
+                            contracts_account = create_contracts(
                                 onboarding=onboarding,
-                                client_id=id_client
+                                data_contract=contracts_data
                             )
-                            return approve_account
+                            if contracts_account.get("code") == "000":
+                                approve_account = approve_deposit_account(
+                                    account_id=account_id,
+                                    client_id=id_client
+                                )
+                                if approve_account.get("code") == "000":
+                                    return approve_account
+                                else:
+                                    return approve_account
+                            else:
+                                return define_response(contracts_account)
                         else:
                             return define_response(patch_account)
                     else:
