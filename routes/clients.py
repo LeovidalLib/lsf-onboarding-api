@@ -41,6 +41,7 @@ def create_clients(onboarding: OnBoardingModel):
             loanCycle=0,
             groupLoanCycle=0,
             clientRoleKey="8ac9821e8af48ceb018afbbc778700e0",
+            assignedBranchKey="8ac9827d8ad0f770018adde687ae00ec"
         )
         data = json.loads(clients_model.model_dump_json())
         data["_Clientes_N2"] = {
